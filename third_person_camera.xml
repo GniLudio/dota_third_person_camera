@@ -1,0 +1,50 @@
+<root>
+    <styles>
+        <include src="s2r://panorama/styles/dotastyles.vcss_c" />
+        <include src="s2r://panorama/styles/popups/settings_slider.vcss_c" />
+        <include src="s2r://panorama/styles/hud/dota_hud_clip_builder.vcss_c" />
+        <include src="s2r://panorama/styles/popups/popup_debut_tool_screen_slider.vcss_c" />
+    </styles>
+    <script>
+        $.Msg("third_person_camera.xml loaded!");
+        function InitSlider(slider) {
+            const min = !isNaN(slider["min"]) ?  slider["min"] : 0;
+            const value = parseFloat(slider.GetAttributeString("value", min.toString()));
+            if (value <= min) slider["min"] = value-1;
+            slider.value = value;
+            if (value <= min) slider["min"] = min;
+        }
+        $.Schedule(0, () => {
+            if (Game.IsInToolsMode() || Game.GetMapInfo()["map_name"] == "testing") $.GetContextPanel().style.opacity = "1";
+            if (Game.IsHUDFlipped()) $.GetContextPanel().style.horizontalAlign = "left";
+            $.GetContextPanel().Children().forEach((child) => {
+                if (child.paneltype == "DOTASettingsSlider")
+                    InitSlider(child)
+                else if (child.paneltype == "DOTASettingsCheckbox")
+                    child.checked = child.GetAttributeString("checked", "false") == "true";
+            });
+        })
+    </script>
+    <scripts>
+        <include src="file://{resources}/scripts/custom_game/utils.js" />
+        <include src="file://{resources}/scripts/custom_game/camera_follow_position.js" />
+        <include src="file://{resources}/scripts/custom_game/camera_follow_yaw.js" />
+    </scripts>
+    <Panel style="flow-children:down;border: 5%;border-bottom:-5%;border-top:1%;background-color:#25292ff8;horizontal-align:right;vertical-align:center;font-size:24;width:20%;opacity:0;">
+        <Label text="Position" class="Headline2" style="horizontal-align:center;text-decoration:underline;"/>
+        <DOTASettingsSlider id="p_max_speed" min="0" max="10000" value="5000" text="#p_max_speed" onvaluechanged="PositionSettings.max_speed = parseFloat($.GetContextPanel().FindChildTraverse('p_max_speed').value)" />
+        <DOTASettingsSlider id="p_speed_curve_exponent" min="0" max="1" value="0.25" displayprecision="2" text="#p_speed_curve_exponent" onvaluechanged="PositionSettings.speed_curve_exponent = parseFloat($.GetContextPanel().FindChildTraverse('p_speed_curve_exponent').value)" />
+        <DOTASettingsSlider id="p_slow_down_radius" min="0" max="1000" value="250" text="#p_slow_down_radius" onvaluechanged="PositionSettings.slow_down_radius = parseFloat($.GetContextPanel().FindChildTraverse('p_slow_down_radius').value)" />
+        <DOTASettingsSlider id="p_influence_of_mouse" min="0" max="1" value="0.25" text="#p_influence_of_mouse" displayprecision="1" percentage="true" onvaluechanged="PositionSettings.influence_of_mouse = parseFloat($.GetContextPanel().FindChildTraverse('p_influence_of_mouse').value)" />
+        <DOTASettingsSlider id="p_free_cam_buffer_duration" min="0" max="3" value="0.3" text="#p_free_cam_buffer_duration" displayprecision="1" onvaluechanged="PositionSettings.free_cam_buffer_duration = parseFloat($.GetContextPanel().FindChildTraverse('p_free_cam_buffer_duration').value)" />
+        <DOTASettingsCheckbox id="p_only_units_on_screen" checked="true" style="margin-bottom:3%;" text="#p_only_units_on_screen" onactivate="PositionSettings.only_units_on_screen = $.GetContextPanel().FindChildTraverse('p_only_units_on_screen').checked" />
+        <DOTASettingsCheckbox id="p_free_cam_middle_mouse" checked="true" style="margin-bottom:3%;" text="#p_free_cam_middle_mouse" onactivate="PositionSettings.free_cam_middle_mouse = $.GetContextPanel().FindChildTraverse('p_free_cam_middle_mouse').checked" />
+        <DOTASettingsCheckbox id="p_free_cam_minimap" checked="true" style="margin-bottom:3%;" text="#p_free_cam_minimap" onactivate="PositionSettings.free_cam_minimap = $.GetContextPanel().FindChildTraverse('p_free_cam_minimap').checked" />
+
+        <Label text="Yaw" class="Headline2" style="horizontal-align:center;text-decoration:underline;"/>
+        <DOTASettingsSlider id="y_max_speed" min="0" max="720" value="180" text="#y_max_speed" onvaluechanged="YawSettings.max_speed = parseFloat($.GetContextPanel().FindChildTraverse('y_max_speed').value)" />
+        <DOTASettingsSlider id="y_speed_curve_exponent" min="0" max="10" value="3" displayprecision="1" text="#y_speed_curve_exponent" onvaluechanged="YawSettings.speed_curve_exponent = parseFloat($.GetContextPanel().FindChildTraverse('y_speed_curve_exponent').value)" />
+        <DOTASettingsSlider id="y_slow_down_angle" min="0" max="90" value="10" displayprecision="1" text="#y_slow_down_angle" onvaluechanged="YawSettings.slow_down_angle = parseFloat($.GetContextPanel().FindChildTraverse('y_slow_down_angle').value)" />
+        <DOTASettingsCheckbox id="y_only_units_on_screen" checked="true" style="margin-bottom:3%;" text="#y_only_units_on_screen" onactivate="YawSettings.only_units_on_screen = $.GetContextPanel().FindChildTraverse('y_only_units_on_screen').checked" />
+    </Panel>
+</root>
