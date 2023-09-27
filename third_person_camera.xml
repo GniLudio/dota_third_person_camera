@@ -15,7 +15,7 @@
             if (value <= min) slider["min"] = min;
         }
         $.Schedule(0, () => {
-            if (Game.IsInToolsMode() || Game.GetMapInfo()["map_name"] == "testing") $.GetContextPanel().style.opacity = "1";
+            if (Game.IsInToolsMode() || Game.GetMapInfo()["map_name"] == "maps/testing.vpk") $.GetContextPanel().style.opacity = "1";
             if (Game.IsHUDFlipped()) $.GetContextPanel().style.horizontalAlign = "left";
             $.GetContextPanel().Children().forEach((child) => {
                 if (child.paneltype == "DOTASettingsSlider")
